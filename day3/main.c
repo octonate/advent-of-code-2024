@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include "../helpers.c"
 
-#define LINE_LEN 32
+#define LINE_LEN 256
 
 int main(void) {
     FILE *fp;

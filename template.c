@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "helpers.c"
+#include "../helpers.c"
 
 int main(void) {
     FILE *fp;

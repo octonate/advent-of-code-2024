@@ -10,10 +10,12 @@ bool isSafe(int arr[], int arrLen) {
     bool isIncr = arr[0] < arr[1] ? true : false;
 
     for (int i = 0; i < arrLen - 1; i++) {
-        if (arr[i] == arr[i + 1]) return false;
-        if (arr[i] > arr[i + 1] && isIncr == true) return false;
-        if (arr[i] < arr[i + 1] && isIncr == false) return false;
-        if (abs(arr[i] - arr[i + 1]) > 3) return false;
+        if (arr[i] == arr[i + 1]
+            || (arr[i] > arr[i + 1] && isIncr == true)
+            || (arr[i] < arr[i + 1] && isIncr == false)
+            || (abs(arr[i] - arr[i + 1]) > 3)) {
+            return false;
+        }
     }
     return true;
 }
@@ -26,11 +28,11 @@ int main(void) {
         return 1;
     }
 
-    int arr[MAX_LEVELS];
     int safeCount = 0;
+    int dampenedSafeCount = 0;
 
     while (fgets(line, sizeof(line), fp)) {
-
+        int arr[MAX_LEVELS];
         Str lineStr = strMake(line);
         int arrLen = 0;
         for (int i = 0; i < MAX_LEVELS; i++) {
@@ -47,10 +49,28 @@ int main(void) {
 
         if (isSafe(arr, arrLen)) {
             safeCount++;
+            dampenedSafeCount++;
+            continue;
+        }
+
+        //yuck
+        int arrComb[arrLen - 1];
+        for (int i = 0; i < arrLen - 1; i++) {
+            for (int j = 0; j < arrLen; j++) {
+                if (j > i) {
+                    arrComb[j - 1] = arr[j];
+                } else if (j < i) {
+                    arrComb[j] = arr[j];
+                }
+            }
+            if (isSafe(arrComb, arrLen - 1)) {
+                dampenedSafeCount++;
+            }
         }
     }
 
     printf("PART 1: %d\n", safeCount);
+    printf("PART 2: %d\n", dampenedSafeCount);
 
 
     fclose(fp);

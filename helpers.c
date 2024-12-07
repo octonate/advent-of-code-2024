@@ -11,6 +11,11 @@ typedef struct Str {
     int len;
 } Str;
 
+enum Axis {
+    HOR,
+    VERT
+};
+
 int fCountChars(FILE *fp, char ch) {
     char buf[BUF_SIZE];
     int count = 0;
@@ -41,12 +46,13 @@ Str strMake(const char *nullstr) {
 }
 
 Str splitFirstTok(Str *str, char delim) {
-    Str out = { .data = str->data };
+    Str out = { NULL, 0 };
     bool foundStart = false;
 
     for (int i = 0; i < str->len; i++) {
         if (str->data[i] != delim) continue;
 
+        out = *str;
         if (foundStart == false) {
             out.len = i;
         }
@@ -77,13 +83,14 @@ int strToI(Str str) {
 }
 
 void strPrint(Str str) {
-    printf("%.*s\n", str.len, str.data);
+    printf("%.*s", str.len, str.data);
 }
 
-void arrPrint(int arr[], int arrLen) {
+void arrPrint(int arr[], int arrLen, enum Axis axis) {
     for (int i = 0; i < arrLen; i++) {
-        printf("%d\n", arr[i]);
+        printf("%d%c", arr[i], axis == HOR ? ' ' : '\n');
     }
+    printf("\n");
 }
 
 void countSort(int arr[], int arrLen) {

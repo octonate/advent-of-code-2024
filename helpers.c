@@ -4,7 +4,6 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#define LINE_LEN 32
 #define BUF_SIZE 16384
 
 typedef struct Str {

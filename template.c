@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "../helpers.c"
 
+#define LINE_LEN 32
+
 int main(void) {
     FILE *fp;
     char line[LINE_LEN];

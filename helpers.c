@@ -45,6 +45,17 @@ Str strMake(const char *nullstr) {
     return (struct Str) { .data = nullstr, .len = strlen(nullstr) };
 }
 
+bool strCompare(Str str1, Str str2) {
+    if (str1.len != str2.len) return false;
+
+    for (int i = 0; i < str1.len; i++) {
+        if (str1.data[i] != str2.data[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 Str splitFirstTok(Str *str, char delim) {
     Str out = { NULL, 0 };
     bool foundStart = false;

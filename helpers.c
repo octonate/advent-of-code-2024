@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #define BUF_SIZE 16384
+#define LIST_LEN 128
 
 typedef struct Str {
     const char *data;
@@ -15,6 +16,7 @@ enum Axis {
     HOR,
     VERT
 };
+
 
 int fCountChars(FILE *fp, char ch) {
     char buf[BUF_SIZE];
@@ -146,4 +148,13 @@ int arrCountInts(int arr[], int arrLen, int num) {
         }
     }
     return count;
+}
+
+int arrGetIdx(int arr[], int arrLen, int num) {
+    for (int i = 0; i < arrLen; i++) {
+        if (arr[i] == num) {
+            return i;
+        }
+    }
+    return -1;
 }

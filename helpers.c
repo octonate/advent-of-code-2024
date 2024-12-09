@@ -4,8 +4,10 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#define BUF_SIZE 16384
-#define LIST_LEN 128
+#define FILE_BUF_SIZE 16384
+
+#define MOVE_CURSOR_RIGHT(x) printf("\033[%dC", x)
+#define MOVE_CURSOR_LEFT(x) printf("\033[%dD", x)
 
 typedef struct Str {
     const char *data;
@@ -19,7 +21,7 @@ enum Axis {
 
 
 int fCountChars(FILE *fp, char ch) {
-    char buf[BUF_SIZE];
+    char buf[FILE_BUF_SIZE];
     int count = 0;
 
     while (1) {
@@ -157,4 +159,16 @@ int arrGetIdx(int arr[], int arrLen, int num) {
         }
     }
     return -1;
+}
+
+void arrSwapIdxs(int arr[], int arrLen, int idx1, int idx2) {
+    if (idx1 >= arrLen
+        || idx2 >= arrLen
+        || idx1 < 0
+        || idx2 < 0) {
+        return;
+    }
+    int tmp = arr[idx1];
+    arr[idx1] = arr[idx2];
+    arr[idx2] = tmp;
 }

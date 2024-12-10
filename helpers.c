@@ -9,6 +9,11 @@
 #define MOVE_CURSOR_RIGHT(x) printf("\033[%dC", x)
 #define MOVE_CURSOR_LEFT(x) printf("\033[%dD", x)
 
+typedef struct Point {
+    int x;
+    int y;
+} Point;
+
 typedef struct Str {
     const char *data;
     int len;
@@ -18,6 +23,49 @@ enum Axis {
     HOR,
     VERT
 };
+
+enum Direction {
+    UP = 0,
+    RIGHT,
+    DOWN,
+    LEFT,
+};
+
+enum PrimitiveType {
+    TYPE_INT = 0,
+    TYPE_CHAR,
+    TYPE_FLOAT,
+    TYPE_DOUBLE,
+};
+
+bool isPointInGrid(Point pos, int gridSideLen) {
+    return (pos.x >= 0 
+            && pos.y >= 0
+            && pos.x < gridSideLen
+            && pos.y < gridSideLen);
+}
+
+void gridPrintGeneric(void *arr, int width, int height, enum PrimitiveType type) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            switch (type) {
+            case TYPE_INT:
+                printf("%d", ((int *)arr)[i * j]);
+                break;
+            case TYPE_CHAR:
+                printf("%c", ((char *)arr)[i * j]);
+                break;
+            case TYPE_FLOAT:
+                printf("%.*f", 3, ((float *)arr)[i * j]);
+                break;
+            case TYPE_DOUBLE:
+                printf("%.*lf", 3, ((double *)arr)[i * j]);
+                break;
+            }
+        }
+        printf("\n");
+    }
+}
 
 
 int fCountChars(FILE *fp, char ch) {
@@ -108,6 +156,7 @@ void arrPrint(int arr[], int arrLen, enum Axis axis) {
     printf("\n");
 }
 
+
 void countSort(int arr[], int arrLen) {
     int maxVal = INT_MIN;
     int minVal = INT_MAX;
@@ -172,3 +221,4 @@ void arrSwapIdxs(int arr[], int arrLen, int idx1, int idx2) {
     arr[idx1] = arr[idx2];
     arr[idx2] = tmp;
 }
+

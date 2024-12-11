@@ -47,6 +47,10 @@ bool isPointInGrid(Point pos, int gridSideLen) {
             && pos.y < gridSideLen);
 }
 
+bool pointCompare(Point point1, Point point2) {
+    return (point1.x == point2.x && point1.y == point2.y);
+}
+
 void gridPrintGeneric(void *arr, int width, int height, enum PrimitiveType type) {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {

@@ -27,6 +27,26 @@ struct PointPair getAntinodes(Point point1, Point point2) {
     };
 }
 
+void getAntinodesUpdated(Point *anodesList, int *anodesListLen, Point point1, Point point2, int gridSideLen) {
+    Point curPoint = point1;
+    int dx = point2.x - point1.x;
+    int dy = point2.y - point1.y;
+    *anodesListLen = 0;
+    while (isPointInGrid(curPoint, gridSideLen)) {
+        anodesList[*anodesListLen] = curPoint;
+        (*anodesListLen)++;
+        curPoint.x += dx;
+        curPoint.y += dy;
+    }
+    curPoint = point2;
+    while (isPointInGrid(curPoint, gridSideLen)) {
+        anodesList[*anodesListLen] = curPoint;
+        (*anodesListLen)++;
+        curPoint.x += dx;
+        curPoint.y += dy;
+    }
+}
+
 int main(void) {
     FILE *fp;
     char line[LINE_LEN];
@@ -41,6 +61,7 @@ int main(void) {
     int freqLens[CHAR_MAX] = {0};
 
     int antinodeGrid[GRID_SIDE_LEN][GRID_SIDE_LEN] = {0};
+    int antinodeGridUpdated[GRID_SIDE_LEN][GRID_SIDE_LEN] = {0};
 
     for (int i = 0; i < GRID_SIDE_LEN; i++) {
         fgets(line, sizeof(line), fp);
@@ -71,10 +92,17 @@ int main(void) {
 
                 struct PointPair antinodes = getAntinodes(point1, point2);
                 if (isPointInGrid(antinodes.point1, GRID_SIDE_LEN)) {
-                    antinodeGrid[antinodes.point1.x][antinodes.point1.y] = 1;
+                    antinodeGrid[antinodes.point1.y][antinodes.point1.x] = 1;
                 }
                 if (isPointInGrid(antinodes.point2, GRID_SIDE_LEN)) {
-                    antinodeGrid[antinodes.point2.x][antinodes.point2.y] = 1;
+                    antinodeGrid[antinodes.point2.y][antinodes.point2.x] = 1;
+                }
+
+                Point anodesList[NUM_ANTENNAS];
+                int anodesListLen;
+                getAntinodesUpdated(anodesList, &anodesListLen, point1, point2, GRID_SIDE_LEN);
+                for (int l = 0; l < anodesListLen; l++) {
+                    antinodeGridUpdated[anodesList[l].y][anodesList[l].x] = 1;
                 }
             }
         }
@@ -89,7 +117,9 @@ int main(void) {
     //}
 
     int sum = arrCountInts(&antinodeGrid[0][0], GRID_SIDE_LEN * GRID_SIDE_LEN, 1);
+    int sum2 = arrCountInts(&antinodeGridUpdated[0][0], GRID_SIDE_LEN * GRID_SIDE_LEN, 1);
     printf("PART 1: %d\n", sum);
+    printf("PART 2: %d\n", sum2);
 
     fclose(fp);
     return 0;

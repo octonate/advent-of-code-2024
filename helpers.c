@@ -14,10 +14,12 @@ typedef struct Point {
     int y;
 } Point;
 
+
 typedef struct Str {
     const char *data;
-    int len;
+    size_t len;
 } Str;
+
 
 enum Axis {
     HOR,
@@ -25,7 +27,7 @@ enum Axis {
 };
 
 enum Direction {
-    UP = 0,
+    UP = 1,
     RIGHT,
     DOWN,
     LEFT,
@@ -50,16 +52,16 @@ void gridPrintGeneric(void *arr, int width, int height, enum PrimitiveType type)
         for (int j = 0; j < width; j++) {
             switch (type) {
             case TYPE_INT:
-                printf("%d", ((int *)arr)[i * j]);
+                printf("%d", ((int *)arr)[i * width + j]);
                 break;
             case TYPE_CHAR:
-                printf("%c", ((char *)arr)[i * j]);
+                printf("%c", ((char *)arr)[i * width + j]);
                 break;
             case TYPE_FLOAT:
-                printf("%.*f", 3, ((float *)arr)[i * j]);
+                printf("%.*f", 3, ((float *)arr)[i * width + j]);
                 break;
             case TYPE_DOUBLE:
-                printf("%.*lf", 3, ((double *)arr)[i * j]);
+                printf("%.*lf", 3, ((double *)arr)[i * width + j]);
                 break;
             }
         }
@@ -78,7 +80,7 @@ int fCountChars(FILE *fp, char ch) {
             return -1;
         }
 
-        for (int i = 0; i < curBufLen; i++) {
+        for (size_t i = 0; i < curBufLen; i++) {
             if (buf[i] == ch) {
                 count++;
             }
@@ -100,7 +102,7 @@ Str strMake(const char *nullstr) {
 bool strCompare(Str str1, Str str2) {
     if (str1.len != str2.len) return false;
 
-    for (int i = 0; i < str1.len; i++) {
+    for (size_t i = 0; i < str1.len; i++) {
         if (str1.data[i] != str2.data[i]) {
             return false;
         }
@@ -112,7 +114,7 @@ Str splitFirstTok(Str *str, char delim) {
     Str out = { NULL, 0 };
     bool foundStart = false;
 
-    for (int i = 0; i < str->len; i++) {
+    for (size_t i = 0; i < str->len; i++) {
         if (str->data[i] != delim) continue;
 
         out = *str;
@@ -138,19 +140,28 @@ Str splitFirstTok(Str *str, char delim) {
 
 int strToI(Str str) {
     char nullstr[str.len + 1];
-    for (int i = 0; i < str.len; i++) {
+    for (size_t i = 0; i < str.len; i++) {
         nullstr[i] = str.data[i];
     }
     nullstr[str.len] = 0;
     return atoi(nullstr);
 }
 
-void strPrint(Str str) {
-    printf("%.*s", str.len, str.data);
+long long strToLL(Str str) {
+    char nullstr[str.len + 1];
+    for (size_t i = 0; i < str.len; i++) {
+        nullstr[i] = str.data[i];
+    }
+    nullstr[str.len] = 0;
+    return atoll(nullstr);
 }
 
-void arrPrint(int arr[], int arrLen, enum Axis axis) {
-    for (int i = 0; i < arrLen; i++) {
+void strPrint(Str str) {
+    printf("%.*s", (int) str.len, str.data);
+}
+
+void arrPrint(int arr[], size_t arrLen, enum Axis axis) {
+    for (size_t i = 0; i < arrLen; i++) {
         printf("%d%c", arr[i], axis == HOR ? ' ' : '\n');
     }
     printf("\n");
@@ -191,9 +202,9 @@ void countSort(int arr[], int arrLen) {
     }
 }
 
-int arrCountInts(int arr[], int arrLen, int num) {
+int arrCountInts(int arr[], size_t arrLen, int num) {
     int count = 0;
-    for (int i = 0; i < arrLen; i++) {
+    for (size_t i = 0; i < arrLen; i++) {
         if (arr[i] == num) {
             count++;
         }
@@ -201,20 +212,17 @@ int arrCountInts(int arr[], int arrLen, int num) {
     return count;
 }
 
-int arrGetIdx(int arr[], int arrLen, int num) {
-    for (int i = 0; i < arrLen; i++) {
+size_t arrGetIdx(int arr[], size_t arrLen, int num) {
+    for (size_t i = 0; i < arrLen; i++) {
         if (arr[i] == num) {
             return i;
         }
     }
-    return -1;
+    return (size_t) -1;
 }
 
-void arrSwapIdxs(int arr[], int arrLen, int idx1, int idx2) {
-    if (idx1 >= arrLen
-        || idx2 >= arrLen
-        || idx1 < 0
-        || idx2 < 0) {
+void arrSwapIdxs(int arr[], size_t arrLen, size_t idx1, size_t idx2) {
+    if (idx1 >= arrLen || idx2 >= arrLen) {
         return;
     }
     int tmp = arr[idx1];
